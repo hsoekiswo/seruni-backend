@@ -7,7 +7,16 @@ import { registration, authenticateToken, generateAccessToken } from './service'
 const app = express();
 const port = 3000;
 
-app.use(cors());
+// Configure CORS middleware to allow requests from your frontend
+const corsOptions = {
+    origin: 'http://localhost:5173',  // Allow only localhost:5173
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+    credentials: true,  // Allow credentials (cookies, authorization headers, etc.)
+  };
+app.use(cors(corsOptions));
+
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -37,6 +46,8 @@ app.post('/login', (req: Request, res: Response) => {
 app.get('/dashboard', authenticateToken, (req: Request, res: Response) => {
     res.send('Welcome to the dashboard');
 });
+
+app.options('*', cors(corsOptions));
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
