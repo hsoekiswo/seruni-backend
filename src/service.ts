@@ -27,6 +27,10 @@ export function registration(data: any) {
     return data;
 }
 
+export function getUsers() {
+    return users;
+}
+
 export function generateAccessToken(username: any, password: any) {
     const user = users.find(user => user.username === username);
 

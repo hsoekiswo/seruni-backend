@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import type { Request, Response } from 'express';
-import { registration, authenticateToken, generateAccessToken } from './service';
+import { registration, authenticateToken, generateAccessToken, getUsers } from './service';
 
 const app = express();
 const port = 3000;
@@ -29,7 +29,12 @@ app.post('/register', (req: Request, res: Response) => {
     const data = req.body;
     const users = registration(data);
     res.json(users);
-})
+});
+
+app.get('/register', (req: Request, res: Response) => {
+    const data = getUsers();
+    res.json(data);
+});
 
 app.post('/login', (req: Request, res: Response) => {
     const username = req.body.username;
