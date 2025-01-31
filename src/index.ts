@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import type { Request, Response } from 'express';
-import { registration, authenticateToken, generateAccessToken, getUsers } from './service';
+import type { NextFunction, Request, Response } from 'express';
+import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct } from './service';
 
 const app = express();
 const port = 3000;
@@ -20,10 +20,13 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello Seruni!');
-});
+interface CustomRequest extends Request {
+    id?: string;
+}
 
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello this is Seruni backend page!');
+});
 
 app.post('/register', (req: Request, res: Response) => {
     const data = req.body;
@@ -31,8 +34,14 @@ app.post('/register', (req: Request, res: Response) => {
     res.json(users);
 });
 
-app.get('/register', (req: Request, res: Response) => {
-    const data = getUsers();
+app.param('id', (req: CustomRequest, res: Response, next: NextFunction, id: string) => {
+    req.id = id;
+    next();
+});
+
+app.get('/users/:id', (req: CustomRequest, res: Response) => {
+    const id = req.id;
+    const data = getUser(id);
     res.json(data);
 });
 
@@ -46,6 +55,18 @@ app.post('/login', (req: Request, res: Response) => {
     }
     
     res.json(token);
+});
+
+app.get('/products/:id', (req: CustomRequest, res: Response) => {
+    const id = req.id;
+    const data = getProduct(id);
+    res.json(data);
+});
+
+app.post('/products', (req: CustomRequest, res: Response) => {
+    const data = req.body;
+    const products = addPoduct(data);
+    res.json(products);
 });
 
 app.get('/dashboard', authenticateToken, (req: Request, res: Response) => {
