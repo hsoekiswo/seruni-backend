@@ -1,47 +1,51 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import path from 'path'
 import type { Request, Response, NextFunction } from 'express';
+import { Database } from "bun:sqlite";
+import db from './db';
 
 dotenv.config();
 const secret = process.env.TOKEN_SECRET;
 
-export const users = [
-    {
-        'username': 'hsoekiswo',
-        'password': 'password',
-        'name': 'Hafizhun Soekiswo',
-        'email': 'hsoekiswo@gmail.com',
-        'phone': '08212345'
-    },
-    {
-        'username': 'ijun',
-        'password': 'ijun123',
-        'name': 'Ijun',
-        'email': 'ijun@mail.com',
-        'phone': '0898765'
-    }
-]
-
 export function registration(data: any) {
-    users.push(data);
-    return data;
+    const registerUser = `INSERT INTO users(username, password, name, email, phone) VALUES ($username, $password, $name, $email, $phone)`;
+    db.run(registerUser, [data.username, data.password, data.name, data.email, data.phone]);
+
+    return {message: "Successfully registered", data};
 }
 
 export function getUser(id: any) {
-    return users[id];
+    const getUser = `SELECT * FROM users WHERE id = $id`;
+    const query = db.query(getUser);
+    const result = query.get({
+        $id: id,
+    });
+
+    return result;
 }
 
 export function generateAccessToken(username: any, password: any) {
-    const user = users.find(user => user.username === username);
-
-    if (!user) {
-        console.error('User not found!');
-        return null;
-    }
-
-    if (user.password !== password) {
-        console.error('Invalid password');
-        return null; // or throw an error
+    const getUserByUsername = (username: string) => {
+        const query = db.query("SELECT * FROM users WHERE username = ?");
+        return query.get(username);  // Returns a single user or null if not found
+      };
+      
+      const authenticateUser = (username: string, password: string) => {
+        // Step 1: Retrieve user from database by username
+        const user = getUserByUsername(username);
+      
+        // Step 2: Check if user exists
+        if (!user) {
+          console.error('User not found!');
+          return null;
+        }
+      
+        // Step 3: Compare the provided password with the stored password
+        if (user.password !== password) {
+          console.error('Invalid password');
+          return null;  // Invalid password
+        }
     }
     
     const payload = { username: user.username };
@@ -81,25 +85,19 @@ export const authenticateToken: any = (req: Request, res: Response, next: NextFu
     });
 };
 
-export const products = [
-    {
-        name: "Touch For Health - The Complete Edition",
-        image: "https://devorss.com/cdn/shop/files/9780875169125_c039adc2-c6ee-4a20-86c1-4f35871552b9.jpg?v=1684360516&width=800",
-    },
-    {
-        name: "Touch for Health Handy Assessment Chart",
-        image: "https://devorss.com/cdn/shop/products/300_11x17-Handy-Assessment-Chart-proof-1.jpg?v=1659989315&width=300",
-    },
-    // Example for post:
-    // "name": "Courses 1",
-    // "image": "https://pustakalanalibrary.wordpress.com/wp-content/uploads/2024/06/1.png?w=819"
-]
-
 export function getProduct(id: any) {
-    return products[id];
+    const getProduct = `SELECT * FROM products WHERE id = $id`;
+    const query = db.query(getProduct);
+    const result = query.get({
+        $id: id,
+    });
+
+    return result;
 };
 
 export function addPoduct(data: any) {
-    products.push(data);
-    return data;
+    const registerUser = `INSERT INTO products(name, image, description, price) VALUES ($name, $image, $description, $price)`;
+    db.run(registerUser, [data.name, data.image, data.description, data.price]);
+
+    return {message: "Successfully input product item", data};
 };

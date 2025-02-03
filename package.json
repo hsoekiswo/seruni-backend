@@ -1,5 +1,9 @@
 {
   "name": "seruni-backend",
+  "scripts": {
+    "dev": "bun run src/index.ts",
+    "seed": "bun run src/seed.ts"
+  },
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
@@ -15,6 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.7"
   }
 }
