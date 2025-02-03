@@ -44,10 +44,15 @@ export function generateAccessToken(username: any, password: any) {
           console.error('Invalid password');
           return null;  // Invalid password
         }
-    }
+      
+        // Step 4: If password is valid, generate JWT
+        const payload = { username: user.username };
+        return jwt.sign(payload, secret, { expiresIn: '1800s' });  // Create the JWT
+    };
     
-    const payload = { username: user.username };
-    return jwt.sign(payload, secret as string, { expiresIn: '1800s' });
+    const token = authenticateUser(username, password);
+
+    return token;
 };
 
 interface User {
