@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import path from 'path'
 import type { Request, Response, NextFunction } from 'express';
-import { Database } from "bun:sqlite";
 import db from './db';
 
 dotenv.config();
