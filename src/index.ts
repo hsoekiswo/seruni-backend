@@ -3,9 +3,18 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import type { NextFunction, Request, Response } from 'express';
 import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct } from './service';
+import "./db";
+import { existsSync } from "fs";
+import { execSync } from "child_process";
 
 const app = express();
 const port = 3000;
+
+// Set up seed
+if (!existsSync("seruni.sqlite")) {
+    console.log("Database not found, running seed script...");
+    execSync("bun run src/seed.ts", {stdio: "inherit"});
+}
 
 // Configure CORS middleware to allow requests from your frontend
 const corsOptions = {
