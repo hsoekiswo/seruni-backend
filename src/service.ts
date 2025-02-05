@@ -106,6 +106,16 @@ export function getProducts() {
     return result;
 }
 
+export function updateProduct(id: any, data: any) {
+  const currentProduct = db.query(`SELECT * FROM products WHERE id = $id`).get({$id: id});
+
+  const updatedProduct = `UPDATE products SET name = $name, image = $image, description = $description, price = $price WHERE id = $id`
+  db.run(updatedProduct, {$name: data.name ?? currentProduct.name, $image: data.image ?? currentProduct.image, $description: data.description ?? currentProduct.description, $price: data.price ?? currentProduct.price, $id: id })
+  const updatedData = getProduct(id);
+
+  return updatedData;
+}
+
 export function addPoduct(data: any) {
     const registerUser = `INSERT INTO products(name, image, description, price) VALUES ($name, $image, $description, $price)`;
     db.run(registerUser, [data.name, data.image, data.description, data.price]);
