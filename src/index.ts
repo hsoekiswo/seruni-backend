@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import type { NextFunction, Request, Response } from 'express';
-import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct, getProducts } from './service';
+import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct, getProducts, updateProduct } from './service';
 import "./db";
 import { existsSync } from "fs";
 import { execSync } from "child_process";
@@ -82,6 +82,13 @@ app.post('/products', (req: CustomRequest, res: Response) => {
     const products = addPoduct(data);
     res.json(products);
 });
+
+app.patch('/products/:id', (req: CustomRequest, res: Response) => {
+    const id = req.id;
+    const data = req.body;
+    const result = updateProduct(id, data);
+    res.json(result);
+})
 
 app.get('/dashboard', authenticateToken, (req: Request, res: Response) => {
     res.send('Welcome to the dashboard');
