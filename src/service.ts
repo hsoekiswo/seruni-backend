@@ -98,6 +98,14 @@ export function getProduct(id: any) {
     return result;
 };
 
+export function getProducts() {
+    const getProducts = `SELECT * FROM products`;
+    const query = db.query(getProducts);
+    const result = query.all();
+
+    return result;
+}
+
 export function addPoduct(data: any) {
     const registerUser = `INSERT INTO products(name, image, description, price) VALUES ($name, $image, $description, $price)`;
     db.run(registerUser, [data.name, data.image, data.description, data.price]);

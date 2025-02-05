@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import type { NextFunction, Request, Response } from 'express';
-import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct } from './service';
+import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct, getProducts } from './service';
 import "./db";
 import { existsSync } from "fs";
 import { execSync } from "child_process";
@@ -69,6 +69,11 @@ app.post('/login', (req: Request, res: Response) => {
 app.get('/products/:id', (req: CustomRequest, res: Response) => {
     const id = req.id;
     const data = getProduct(id);
+    res.json(data);
+});
+
+app.get('/products', (req: CustomRequest, res: Response) => {
+    const data = getProducts();
     res.json(data);
 });
 
