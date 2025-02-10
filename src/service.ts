@@ -49,7 +49,7 @@ export function generateAccessToken(username: any, password: any) {
             return null;
           }
         })
-        
+
         // Step 4: If password is valid, generate JWT
         const payload = { username: user.username, name: user.name, role: user.role };
         return jwt.sign(payload, secret, { expiresIn: '1800s' });  // Create the JWT
