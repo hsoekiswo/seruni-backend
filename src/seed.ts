@@ -1,41 +1,40 @@
 import db from "./db";
+import { encryptPassword } from "./service";
 
 const createUsers = `CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT,
-    name TEXT,
-    email TEXT UNIQUE,
-    phone TEXT
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    phone TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user')),
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
 )`
 
 db.run(createUsers);
 
 const userCount = db.query(`SELECT COUNT(*) AS count FROM users`).get();
+const hashPassword = await encryptPassword(process.env.ADMIN_PASSWORD as string);
 
 if (userCount.count === 0) {
     console.log("Seeding users...");
     const initialUsers = db.prepare(
-        `INSERT INTO users (username, password, name, email, phone) VALUES ($username, $password, $name, $email, $phone)`
+        `INSERT INTO users (username, password, name, email, phone, role) VALUES ($username, $password, $name, $email, $phone, $role)`
     )
     const users = [
         {
-            'username': 'hsoekiswo',
-            'password': 'password',
-            'name': 'Hafizhun Soekiswo',
-            'email': 'hsoekiswo@gmail.com',
-            'phone': '08212345'
-        },
-        {
-            'username': 'ijun',
-            'password': 'ijun123',
-            'name': 'Ijun',
-            'email': 'ijun@mail.com',
-            'phone': '0898765'
+            'username': process.env.ADMIN_USERNAME,
+            'password': hashPassword,
+            'name': 'Admin',
+            'email': process.env.ADMIN_EMAIL,
+            'phone': process.env.ADMIN_PHONE,
+            'role': 'admin'
         }
     ];
     users.forEach(user => {
-        initialUsers.run([user.username, user.password, user.name, user.email, user.phone]);
+        initialUsers.run([user.username, user.password, user.name, user.email, user.phone, user.role]);
     });
 }
 
@@ -45,7 +44,9 @@ const createProducts = `CREATE TABLE IF NOT EXISTS products(
     name TEXT UNIQUE,
     image TEXT,
     description TEXT,
-    price REAL
+    price REAL,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
 )`
 
 db.run(createProducts);

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import type { Request, Response, NextFunction } from 'express';
+import bcrypt from "bcryptjs";
 import db from './db';
 
 dotenv.config();
@@ -26,7 +27,7 @@ export function getUser(id: any) {
 export function generateAccessToken(username: any, password: any) {
     const getUserByUsername = (username: string) => {
         const query = db.query("SELECT * FROM users WHERE username = ?");
-        return query.get(username);  // Returns a single user or null if not found
+        return query.get(username);
       };
       
       const authenticateUser = (username: string, password: string) => {
@@ -40,13 +41,17 @@ export function generateAccessToken(username: any, password: any) {
         }
       
         // Step 3: Compare the provided password with the stored password
-        if (user.password !== password) {
-          console.error('Invalid password');
-          return null;  // Invalid password
-        }
-      
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (result) {
+            console.log("Login successful!");
+          } else {
+            console.error('Invalid password');
+            return null;
+          }
+        })
+
         // Step 4: If password is valid, generate JWT
-        const payload = { username: user.username };
+        const payload = { username: user.username, name: user.name, role: user.role };
         return jwt.sign(payload, secret, { expiresIn: '1800s' });  // Create the JWT
     };
     
@@ -121,4 +126,16 @@ export function addPoduct(data: any) {
     db.run(registerUser, [data.name, data.image, data.description, data.price]);
 
     return {message: "Successfully input product item", data};
+};
+
+export function encryptPassword(password: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, 10, (err, hash) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(hash);
+      }
+    });
+  });
 };
