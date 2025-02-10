@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import type { Request, Response, NextFunction } from 'express';
+import bcrypt from "bcryptjs";
 import db from './db';
 
 dotenv.config();
@@ -121,4 +122,16 @@ export function addPoduct(data: any) {
     db.run(registerUser, [data.name, data.image, data.description, data.price]);
 
     return {message: "Successfully input product item", data};
+};
+
+export function encryptPassword(password: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, 10, (err, hash) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(hash);
+      }
+    });
+  });
 };
