@@ -26,7 +26,7 @@ export function getUser(id: any) {
 export function generateAccessToken(username: any, password: any) {
     const getUserByUsername = (username: string) => {
         const query = db.query("SELECT * FROM users WHERE username = ?");
-        return query.get(username);  // Returns a single user or null if not found
+        return query.get(username);
       };
       
       const authenticateUser = (username: string, password: string) => {
@@ -46,7 +46,7 @@ export function generateAccessToken(username: any, password: any) {
         }
       
         // Step 4: If password is valid, generate JWT
-        const payload = { username: user.username };
+        const payload = { username: user.username, name: user.name, role: user.admin };
         return jwt.sign(payload, secret, { expiresIn: '1800s' });  // Create the JWT
     };
     
