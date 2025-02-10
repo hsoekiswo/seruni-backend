@@ -90,10 +90,6 @@ app.patch('/products/:id', (req: CustomRequest, res: Response) => {
     res.json(result);
 })
 
-app.get('/dashboard', authenticateToken, (req: Request, res: Response) => {
-    res.send('Welcome to the dashboard');
-});
-
 app.options('*', cors(corsOptions));
 
 app.listen(port, () => {

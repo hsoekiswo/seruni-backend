@@ -75,6 +75,11 @@ if (productCount.count === 0) {
         // "image": "https://pustakalanalibrary.wordpress.com/wp-content/uploads/2024/06/1.png?w=819",
         // "description": "Kinesiolog memiliki arti 'ilmu tentang gerak tubuh'. Istilah ini juga dipakai untuk mendeskripsikan sebuah bentuk terapi yang menggunakan umpan balik dari otot untuk mencari penyebab ketidakseimbangan pada tubuh dan mengoreksinya dengan metode yang sesuai. Pada anak, kita bisa membantu mereka mengatasi tanda-tanda ketidakseimbangan seperti low energy, craving, atau beragam emosi yang mempengaruhi kenyamanan mereka dalam berkeseharian dengan gerakan-gerakan sederhana.",
         // "price": 550000
+        // "id": 4,
+        // "name": "Touch for Health Midday-Midnight Law & Five Elements Law Chart",
+        // "image": "https://devorss.com/cdn/shop/files/touchforhealthmiddaymidnightchartoriginal9780875167725.jpg?v=1692297791&width=600",
+        // "description": "Practical wall size chart for assessing and balancing energy patterns when teaching a group, or sharing with clients.\n\nTFH Midday/Midnight Law & 5 Elements Chart (24”x32”, full color, laminated) Wall chart shows energy flows in the:\n• 24 hour cycle, (Beaver Dam, Spokes, Squares and Triangles)\n• Seasonal/life cycle energy flows of the Five Elements (Shen and Ko cycles).\n• Basic 14 muscle tests, mapped to the peak times of day for their related energy Meridians\n• Alarm points to check for excess energy in the meridians.\n• All the acupressure holding points for balancing Five Element relationships of the meridians.\n• Five Element metaphor wheel showing 50 associated concepts of the 5 elements\n\nLaminated Chart 24x32\"; 5-pack; 5 Charts in one tube\n\n*NOTE: Economy shipping NOT available for this item.",
+        // "price": 40000
     ]
   products.forEach((product) => initialProducts.run(product.name, product.image, product.description, product.price));
 }
