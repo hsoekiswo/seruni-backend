@@ -18,7 +18,7 @@ if (!existsSync("seruni.sqlite")) {
 
 // Configure CORS middleware to allow requests from your frontend
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://seruni-frontend.vercel.app'],
+    origin: [process.env.URL_DEV as string, process.env.URL_PROD as string],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
