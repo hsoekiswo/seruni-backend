@@ -8,8 +8,8 @@ const createUsers = `CREATE TABLE IF NOT EXISTS users (
     email TEXT UNIQUE,
     phone TEXT,
     role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user')),
-    created_at TEXT DEFAULT (datetime('now)),
-    updated_at TEXT DEFAULT (datetime('now))
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
 )`
 
 db.run(createUsers);
@@ -19,7 +19,7 @@ const userCount = db.query(`SELECT COUNT(*) AS count FROM users`).get();
 if (userCount.count === 0) {
     console.log("Seeding users...");
     const initialUsers = db.prepare(
-        `INSERT INTO users (username, password, name, email, phone) VALUES ($username, $password, $name, $email, $phone, $role)`
+        `INSERT INTO users (username, password, name, email, phone, role) VALUES ($username, $password, $name, $email, $phone, $role)`
     )
     const users = [
         {
@@ -58,7 +58,9 @@ const createProducts = `CREATE TABLE IF NOT EXISTS products(
     name TEXT UNIQUE,
     image TEXT,
     description TEXT,
-    price REAL
+    price REAL,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
 )`
 
 db.run(createProducts);
