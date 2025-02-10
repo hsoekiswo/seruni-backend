@@ -6,7 +6,10 @@ const createUsers = `CREATE TABLE IF NOT EXISTS users (
     password TEXT,
     name TEXT,
     email TEXT UNIQUE,
-    phone TEXT
+    phone TEXT,
+    role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user')),
+    created_at TEXT DEFAULT (datetime('now)),
+    updated_at TEXT DEFAULT (datetime('now))
 )`
 
 db.run(createUsers);
@@ -16,26 +19,36 @@ const userCount = db.query(`SELECT COUNT(*) AS count FROM users`).get();
 if (userCount.count === 0) {
     console.log("Seeding users...");
     const initialUsers = db.prepare(
-        `INSERT INTO users (username, password, name, email, phone) VALUES ($username, $password, $name, $email, $phone)`
+        `INSERT INTO users (username, password, name, email, phone) VALUES ($username, $password, $name, $email, $phone, $role)`
     )
     const users = [
+        {
+            'username': 'admin',
+            'password': 'password',
+            'name': 'Admin',
+            'email': 'serunisekarpuri@gmail.com',
+            'phone': '08212345',
+            'role': 'admin'
+        },
         {
             'username': 'hsoekiswo',
             'password': 'password',
             'name': 'Hafizhun Soekiswo',
             'email': 'hsoekiswo@gmail.com',
-            'phone': '08212345'
+            'phone': '08212345',
+            'role': 'user'
         },
         {
             'username': 'ijun',
             'password': 'ijun123',
             'name': 'Ijun',
             'email': 'ijun@mail.com',
-            'phone': '0898765'
+            'phone': '0898765',
+            'role': 'user'
         }
     ];
     users.forEach(user => {
-        initialUsers.run([user.username, user.password, user.name, user.email, user.phone]);
+        initialUsers.run([user.username, user.password, user.name, user.email, user.phone, user.role]);
     });
 }
 
