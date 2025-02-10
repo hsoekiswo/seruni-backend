@@ -41,13 +41,17 @@ export function generateAccessToken(username: any, password: any) {
         }
       
         // Step 3: Compare the provided password with the stored password
-        if (user.password !== password) {
-          console.error('Invalid password');
-          return null;  // Invalid password
-        }
-      
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (result) {
+            console.log("Login successful!");
+          } else {
+            console.error('Invalid password');
+            return null;
+          }
+        })
+        
         // Step 4: If password is valid, generate JWT
-        const payload = { username: user.username, name: user.name, role: user.admin };
+        const payload = { username: user.username, name: user.name, role: user.role };
         return jwt.sign(payload, secret, { expiresIn: '1800s' });  // Create the JWT
     };
     
