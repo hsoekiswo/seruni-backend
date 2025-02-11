@@ -112,8 +112,8 @@ export function getProducts(search: string | null , tags: string | null) {
         OR description LIKE $search)
       `;
     
-    if (tags) {
-      getProducts += ` AND tags = $tags`;
+    if (tags && tags.length > 0) {
+      getProducts += ` AND tags IN ($tags)`;
     }
 
     const query = db.query(getProducts);
