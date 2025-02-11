@@ -103,10 +103,25 @@ export function getProduct(id: any) {
     return result;
 };
 
-export function getProducts() {
-    const getProducts = `SELECT * FROM products`;
+export function getProducts(search: string | null , tags: string | null) {
+    let getProducts = `
+      SELECT * 
+      FROM products 
+      WHERE
+        (name LIKE $search
+        OR description LIKE $search)
+      `;
+    
+    if (tags) {
+      getProducts += ` AND tags = $tags`;
+    }
+
     const query = db.query(getProducts);
-    const result = query.all();
+    const result = query.all({
+      $search: search ? `%${search}%` : `%`,
+      // Only bind if tags is provided
+      ...(tags ? { $tags: tags } : {}),
+    });
 
     return result;
 }
