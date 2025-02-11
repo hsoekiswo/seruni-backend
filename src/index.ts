@@ -73,7 +73,9 @@ app.get('/products/:id', (req: CustomRequest, res: Response) => {
 });
 
 app.get('/products', (req: CustomRequest, res: Response) => {
-    const data = getProducts();
+    const search = typeof req.query.search === "string" ? req.query.search : null;;
+    const tags = typeof req.query.tags === "string" ? req.query.tags : null;;
+    const data = getProducts(search, tags);
     res.json(data);
 });
 
