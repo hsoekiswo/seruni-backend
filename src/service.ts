@@ -112,16 +112,24 @@ export function getProducts(search: string | null , tags: string | null) {
         OR description LIKE $search)
       `;
     
-    if (tags) {
-      getProducts += ` AND tags = $tags`;
+      const tagArray = typeof tags === 'string' ? tags.split(',') : tags;
+      if (tagArray && tagArray.length > 0) {
+        const placeholders = tagArray.map((_, index) => `$tag${index}`).join(', ');
+        getProducts += ` AND tags IN (${placeholders})`;
     }
 
     const query = db.query(getProducts);
-    const result = query.all({
+
+    const params: any = {
       $search: search ? `%${search}%` : `%`,
-      // Only bind if tags is provided
-      ...(tags ? { $tags: tags } : {}),
-    });
+    };
+    if (tagArray && tagArray.length > 0) {
+      tagArray.forEach((tag, index) => {
+          params[`$tag${index}`] = tag;
+      });
+    }
+
+    const result = query.all(params);
 
     return result;
 }
