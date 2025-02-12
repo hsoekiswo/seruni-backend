@@ -138,7 +138,7 @@ export function updateProduct(id: any, data: any) {
   const currentProduct = db.query(`SELECT * FROM products WHERE id = $id`).get({$id: id});
 
   const updatedProduct = `UPDATE products SET name = $name, image = $image, description = $description, price = $price, tags = $tags WHERE id = $id`
-  db.run(updatedProduct, {$name: data.name ?? currentProduct.name, $image: data.image ?? currentProduct.image, $description: data.description ?? currentProduct.description, $price: data.price ?? currentProduct.price, $id: id, $price: data.tags ?? currentProduct.tags, $id: id })
+  db.run(updatedProduct, {$name: data.name ?? currentProduct.name, $image: data.image ?? currentProduct.image, $description: data.description ?? currentProduct.description, $price: data.price ?? currentProduct.price, $id: id, $tags: data.tags ?? currentProduct.tags, $id: id })
   const updatedData = getProduct(id);
 
   return updatedData;
