@@ -145,7 +145,7 @@ export function updateProduct(id: any, data: any) {
 }
 
 export function addPoduct(data: any) {
-    const registerProduct = `INSERT INTO products(name, image, description, price) VALUES ($name, $image, $description, $price, $tags)`;
+    const registerProduct = `INSERT INTO products(name, image, description, price, tags) VALUES ($name, $image, $description, $price, $tags)`;
     db.run(registerProduct, [data.name, data.image, data.description, data.price, data.tags]);
 
     return {message: "Successfully input product item", data};
