@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import type { NextFunction, Request, Response } from 'express';
-import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct, getProducts, updateProduct } from './service';
+import { registration, authenticateToken, generateAccessToken, getUser, getProduct, addPoduct, getProducts, updateProduct, deleteProduct } from './service';
 import "./db";
 import { existsSync } from "fs";
 import { execSync } from "child_process";
@@ -89,6 +89,12 @@ app.patch('/products/:id', (req: CustomRequest, res: Response) => {
     const id = req.id;
     const data = req.body;
     const result = updateProduct(id, data);
+    res.json(result);
+})
+
+app.delete('/products/:id', (req: CustomRequest, res: Response) => {
+    const id = req.id;
+    const result = deleteProduct(id);
     res.json(result);
 })
 
